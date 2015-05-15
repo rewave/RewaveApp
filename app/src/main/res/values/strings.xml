@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Rewave App</string>
+
+    <string name="title_activity_main">Rewave</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="loading_indicator">•••</string>
+    <string name="pairing">Pairing</string>
+    <string name="connecting">Connecting ⎌</string>
+
+    <string name="lister.title">Rewave</string>
+    <string name="lister.feedback">Feedback</string>
+    <string name="lister.share">Share</string>
+    <string name="lister.discovering">Discovering ☄</string>
+    <string name="lister.rate_us">Rate Us</string>
+    <string name="lister.menu.action_refresh">Discover Devices</string>
+    <string name="lister.menu.action_stop_refreshing">Stop Discovering</string>
+
+    <string name="controller.connection.error">Could not connect, is the server running ?</string>
+    <string name="controller.connection.success">Connected ⚯</string>
+
+</resources>
