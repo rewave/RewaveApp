@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.IntentFilter;
+
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -29,7 +30,6 @@ public class MainActivity
             BtSwitchOffReceiver.OnBtSwitchOffInteractionListener,
             BondStateChangedReceiver.OnBondStateChangedInteractionListener,
             BtDisconnectedReceiver.OnBtDisconnectInteractionListener {
-
     private final static int REQUEST_ENABLE_BT = 1;
     private BtSwitchOffReceiver btSwitchOffReceiver;
     private BondStateChangedReceiver bondStateChangedReceiver;

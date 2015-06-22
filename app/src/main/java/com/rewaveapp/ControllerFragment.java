@@ -2,24 +2,13 @@ package com.rewaveapp;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.btwiz.library.BTSocket;
-import com.btwiz.library.BTWiz;
-import com.btwiz.library.IDeviceConnectionListener;
-
-import java.io.IOException;
-import java.lang.reflect.Method;
 
 
 public class ControllerFragment extends Fragment {
