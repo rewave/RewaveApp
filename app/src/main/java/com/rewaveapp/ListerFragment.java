@@ -21,11 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-<<<<<<< HEAD
 public class ListerFragment extends Fragment implements AdapterView.OnItemClickListener, IDeviceLookupListener {
-=======
-public class ListerFragment extends Fragment implements AdapterView.OnItemClickListener {
->>>>>>> 08f5b6690ec3c5ba13ba42e3b14ccc2357c6c617
 
     OnFragmentInteractionListener listener;
     ListView devicesListView;
@@ -39,13 +35,7 @@ public class ListerFragment extends Fragment implements AdapterView.OnItemClickL
         return new ListerFragment();
     }
 
-<<<<<<< HEAD
     public ListerFragment() {}
-=======
-    public ListerFragment() {
-        // Required empty public constructor
-    }
->>>>>>> 08f5b6690ec3c5ba13ba42e3b14ccc2357c6c617
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,11 +49,7 @@ public class ListerFragment extends Fragment implements AdapterView.OnItemClickL
         return inflater.inflate(R.layout.fragment_lister, container, false);
     }
 
-<<<<<<< HEAD
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-=======
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
->>>>>>> 08f5b6690ec3c5ba13ba42e3b14ccc2357c6c617
         inflater.inflate(R.menu.menu_lister, menu);
         this.menu = menu;
     }
@@ -75,10 +61,7 @@ public class ListerFragment extends Fragment implements AdapterView.OnItemClickL
                 break;
             case R.id.action_stop_refreshing:
                 stopDiscovery();
-<<<<<<< HEAD
                 break;
-=======
->>>>>>> 08f5b6690ec3c5ba13ba42e3b14ccc2357c6c617
             default:
                 break;
         }
@@ -98,10 +81,6 @@ public class ListerFragment extends Fragment implements AdapterView.OnItemClickL
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-<<<<<<< HEAD
-=======
-        Log.d("Lister", "OnAttach called");
->>>>>>> 08f5b6690ec3c5ba13ba42e3b14ccc2357c6c617
         try {
             listener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
@@ -113,10 +92,6 @@ public class ListerFragment extends Fragment implements AdapterView.OnItemClickL
     @Override
     public void onDetach() {
         super.onDetach();
-<<<<<<< HEAD
-=======
-        Log.d("Lister", "OnDetach called");
->>>>>>> 08f5b6690ec3c5ba13ba42e3b14ccc2357c6c617
         listener = null;
         BTWiz.cleanup(getActivity());
     }
@@ -128,30 +103,7 @@ public class ListerFragment extends Fragment implements AdapterView.OnItemClickL
             menu.findItem(R.id.action_stop_refreshing).setVisible(true);
             menu.findItem(R.id.action_refresh).setVisible(false);
             menu.findItem(R.id.progress_indicator).setVisible(true);
-<<<<<<< HEAD
             BTWiz.startDiscoveryAsync(getActivity(), null, this);
-=======
-
-            BTWiz.startDiscoveryAsync(getActivity(), new Runnable() {
-                @Override
-                public void run() {
-                }
-            }, new IDeviceLookupListener() {
-                @Override
-                public boolean onDeviceFound(BluetoothDevice bluetoothDevice, boolean b) {
-                    if (!btDevices.contains(bluetoothDevice)) {
-                        btDevices.add(bluetoothDevice);
-                        listerAdapter.notifyDataSetChanged();
-                    }
-                    return false;
-                }
-
-                @Override
-                public void onDeviceNotFound(boolean b) {
-                    stopDiscovery();
-                }
-            });
->>>>>>> 08f5b6690ec3c5ba13ba42e3b14ccc2357c6c617
         }
     }
 
@@ -166,7 +118,6 @@ public class ListerFragment extends Fragment implements AdapterView.OnItemClickL
         }
     }
 
-<<<<<<< HEAD
     public interface OnFragmentInteractionListener {
         void onDeviceClicked(BluetoothDevice device);
     }
@@ -175,8 +126,6 @@ public class ListerFragment extends Fragment implements AdapterView.OnItemClickL
      * AdapterView.OnItemClickListener
      */
 
-=======
->>>>>>> 08f5b6690ec3c5ba13ba42e3b14ccc2357c6c617
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         stopDiscovery();
@@ -184,7 +133,6 @@ public class ListerFragment extends Fragment implements AdapterView.OnItemClickL
         listener.onDeviceClicked(selectedDevice);
     }
 
-<<<<<<< HEAD
     /*
      * IDeviceLookupListener
      */
@@ -204,9 +152,4 @@ public class ListerFragment extends Fragment implements AdapterView.OnItemClickL
         stopDiscovery();
     }
 
-=======
-    public interface OnFragmentInteractionListener {
-        void onDeviceClicked(BluetoothDevice device);
-    }
->>>>>>> 08f5b6690ec3c5ba13ba42e3b14ccc2357c6c617
 }
