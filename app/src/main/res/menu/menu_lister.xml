@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/progress_indicator"
+        android:title="@string/loading_indicator"
+        app:showAsAction="ifRoom"
+        app:actionLayout="@layout/progress_indicator"
+        android:visible="false" />
+
+    <item
+        android:id="@+id/action_stop_refreshing"
+        android:title="@string/lister.menu.action_stop_refreshing"
+        android:visible="false"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_refresh"
+        app:showAsAction="never"
+        android:title="@string/lister.menu.action_refresh"/>
+
+    <item
+        android:id="@+id/feedback"
+        android:title="@string/lister.feedback" />
+</menu>

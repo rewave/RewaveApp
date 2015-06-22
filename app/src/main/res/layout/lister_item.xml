@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:padding="@dimen/lister.item_padding">
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/letter_tile"
+        android:contentDescription="@string/app_name" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/device_name"
+        android:textColor="@color/gray8"
+        android:textSize="@dimen/abc_text_size_large_material"
+        android:padding="12dp" />
+
+    <!--<ProgressBar-->
+        <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+        <!--style="?android:attr/progressBarStyleSmall"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/progress_indicator"-->
+        <!--android:visibility="invisible"-->
+        <!--android:layout_gravity="center_vertical" />-->
+</LinearLayout>
