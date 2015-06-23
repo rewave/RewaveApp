@@ -66,7 +66,7 @@ public class ControllerFragment extends Fragment {
                 listener.sendCommand("ping");
                 break;
             case (R.id.exit):
-                listener.sendCommand("exit");
+                getActivity().onBackPressed();
                 break;
             default:
                 break;

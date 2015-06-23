@@ -8,6 +8,11 @@
     <string name="pairing">Pairing</string>
     <string name="connecting">Connecting ⎌</string>
 
+    <string name="main.bluetooth_required_title">Rewave needs bluetooth</string>
+    <string name="main.bluetooth_required_body">Please :|</string>
+    <string name="main.no_server_title">Server not Running</string>
+    <string name="main.no_server_body">Please install the server or start it if already installed</string>
+
     <string name="lister.title">Rewave</string>
     <string name="lister.feedback">Feedback</string>
     <string name="lister.share">Share</string>

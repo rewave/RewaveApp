@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.bluetooth.BluetoothDevice;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,11 +13,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.btwiz.library.BTWiz;
 import com.btwiz.library.IDeviceLookupListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 
 public class ListerFragment extends Fragment implements AdapterView.OnItemClickListener, IDeviceLookupListener {
@@ -28,8 +27,6 @@ public class ListerFragment extends Fragment implements AdapterView.OnItemClickL
     Menu menu;
     ListerAdapter listerAdapter;
     List<BluetoothDevice> btDevices;
-
-    boolean isDiscovering = false;
 
     public static ListerFragment newInstance() {
         return new ListerFragment();
@@ -57,10 +54,10 @@ public class ListerFragment extends Fragment implements AdapterView.OnItemClickL
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                startDiscovery();
+                listener.startDiscovery();
                 break;
             case R.id.action_stop_refreshing:
-                stopDiscovery();
+                listener.stopDiscovery();
                 break;
             default:
                 break;
@@ -73,7 +70,7 @@ public class ListerFragment extends Fragment implements AdapterView.OnItemClickL
         super.onActivityCreated(savedInstanceState);
         devicesListView = (ListView) getActivity().findViewById(R.id.devices_list);
         devicesListView.setOnItemClickListener(this);
-        btDevices = new ArrayList<>(BTWiz.getAllBondedDevices(getActivity()));
+        btDevices = new ArrayList<>(listener.getBondedDevices());
         listerAdapter = new ListerAdapter(getActivity(), btDevices);
         devicesListView.setAdapter(listerAdapter);
     }
@@ -91,35 +88,22 @@ public class ListerFragment extends Fragment implements AdapterView.OnItemClickL
 
     @Override
     public void onDetach() {
-        super.onDetach();
         listener = null;
-        BTWiz.cleanup(getActivity());
+        super.onDetach();
     }
 
-    public void startDiscovery() {
-        if (!isDiscovering) {
-            isDiscovering = true;
-            getActivity().setTitle(R.string.lister_discovering);
-            menu.findItem(R.id.action_stop_refreshing).setVisible(true);
-            menu.findItem(R.id.action_refresh).setVisible(false);
-            menu.findItem(R.id.progress_indicator).setVisible(true);
-            BTWiz.startDiscoveryAsync(getActivity(), null, this);
-        }
+    public void discoveryStarted() {
+        getActivity().setTitle(R.string.lister_discovering);
+        menu.findItem(R.id.action_stop_refreshing).setVisible(true);
+        menu.findItem(R.id.action_refresh).setVisible(false);
+        menu.findItem(R.id.progress_indicator).setVisible(true);
     }
 
-    public void stopDiscovery() {
-        if (isDiscovering) {
-            isDiscovering = false;
-            BTWiz.stopDiscovery(getActivity());
+    public void discoveryFinished() {
             getActivity().setTitle(R.string.lister_title);
             menu.findItem(R.id.action_stop_refreshing).setVisible(false);
             menu.findItem(R.id.action_refresh).setVisible(true);
             menu.findItem(R.id.progress_indicator).setVisible(false);
-        }
-    }
-
-    public interface OnFragmentInteractionListener {
-        void onDeviceClicked(BluetoothDevice device);
     }
 
     /*
@@ -128,7 +112,7 @@ public class ListerFragment extends Fragment implements AdapterView.OnItemClickL
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        stopDiscovery();
+        listener.stopDiscovery();
         BluetoothDevice selectedDevice = (BluetoothDevice) listerAdapter.getItem(position);
         listener.onDeviceClicked(selectedDevice);
     }
@@ -149,7 +133,13 @@ public class ListerFragment extends Fragment implements AdapterView.OnItemClickL
 
     @Override
     public void onDeviceNotFound(boolean b) {
-        stopDiscovery();
+        listener.stopDiscovery();
     }
 
+    public interface OnFragmentInteractionListener {
+        Set<BluetoothDevice> getBondedDevices();
+        void startDiscovery();
+        void stopDiscovery();
+        void onDeviceClicked(BluetoothDevice device);
+    }
 }

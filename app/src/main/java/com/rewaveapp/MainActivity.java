@@ -1,10 +1,11 @@
 package com.rewaveapp;
 
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -15,9 +16,12 @@ import com.btwiz.library.BTSocket;
 import com.btwiz.library.BTWiz;
 import com.btwiz.library.DeviceNotSupportBluetooth;
 import com.btwiz.library.IDeviceConnectionListener;
+import com.btwiz.library.IDeviceLookupListener;
+import com.btwiz.library.IReadListener;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.Set;
 
 
 public class MainActivity
@@ -25,11 +29,14 @@ public class MainActivity
             AppCompatActivity
         implements
             ListerFragment.OnFragmentInteractionListener,
+            IDeviceLookupListener,
             IDeviceConnectionListener,
+            // IReadListener,
             ControllerFragment.OnFragmentInteractionListener,
             BtSwitchOffReceiver.OnBtSwitchOffInteractionListener,
             BondStateChangedReceiver.OnBondStateChangedInteractionListener,
             BtDisconnectedReceiver.OnBtDisconnectInteractionListener {
+
     private final static int REQUEST_ENABLE_BT = 1;
     private BtSwitchOffReceiver btSwitchOffReceiver;
     private BondStateChangedReceiver bondStateChangedReceiver;
@@ -41,6 +48,7 @@ public class MainActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.e("Main", "onCreate called");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -53,7 +61,7 @@ public class MainActivity
             registerReceiver(btSwitchOffReceiver, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
 
         } catch (DeviceNotSupportBluetooth e) {
-            Toast.makeText(getApplicationContext(), "No Bluetooth Available : Rewave needs bluetooth to function",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "No Bluetooth Available : Rewave needs bluetooth to function", Toast.LENGTH_LONG).show();
             finish();
         }
     }
@@ -62,13 +70,8 @@ public class MainActivity
     public void onBackPressed() {
         if (controlling) {
             controlling = false;
-
             sendCommand("exit"); // indicate the server that the connection is being closed
-
-            // reload the activity
-            Intent intent = getIntent();
-            finish();
-            startActivity(intent);
+            Util.recreateActivityCompat(this);
         } else {
             finish();
         }
@@ -76,12 +79,17 @@ public class MainActivity
 
     @Override
     protected void onDestroy() {
+        Log.e("Main", "onDestroy called");
         super.onDestroy();
         unregisterReceiver(btSwitchOffReceiver);
         if (bondStateChangedReceiver != null) unregisterReceiver(bondStateChangedReceiver);
         if (btDisconnectedReceiver != null) unregisterReceiver(btDisconnectedReceiver);
         BTWiz.cleanup(getApplicationContext());
-        socket.close();
+        try {
+            socket.close();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
     }
 
     public void startSwitchBtOnIntent() {
@@ -96,8 +104,22 @@ public class MainActivity
                 showListerFragment();
                 break;
             case RESULT_CANCELED:
-                // TODO : Give a primer as to why we need bt
-                startSwitchBtOnIntent();
+                final AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+                alert.setTitle(getString(R.string.main_bluetooth_required_title));
+                alert.setMessage(getString(R.string.main_bluetooth_required_body));
+                alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startSwitchBtOnIntent();
+                    }
+                });
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        alert.show();
+                    }
+                });
+
                 break;
             default:
                 break;
@@ -114,7 +136,7 @@ public class MainActivity
     }
 
     /*
-     * Lister Fragment Interactions
+     * ListerFragment Interactions
      */
 
     // Helper methods for Lister
@@ -131,10 +153,36 @@ public class MainActivity
         return (Boolean) createBondMethod.invoke(device);
     }
 
+    private boolean isDiscovering = false;
+
+    @Override
+    public Set<BluetoothDevice> getBondedDevices() {
+        return BTWiz.getAllBondedDevices(getApplicationContext());
+    }
+
+    @Override
+    public void startDiscovery() {
+        if (!isDiscovering) {
+            isDiscovering = true;
+            BTWiz.startDiscoveryAsync(getApplicationContext(), null, this);
+            ((ListerFragment) getFragmentManager().findFragmentById(R.id.container)).discoveryStarted();
+        }
+    }
+
+    @Override
+    public void stopDiscovery() {
+        if (isDiscovering) {
+            isDiscovering = false;
+            BTWiz.stopDiscovery(getApplicationContext());
+            ((ListerFragment) getFragmentManager().findFragmentById(R.id.container)).discoveryFinished();
+        }
+    }
+
     @Override
     public void onDeviceClicked(BluetoothDevice device) {
         Log.e("Main", "Device Clicked " + device.getName());
 
+        controlling = true;
         this.device = device;
         findViewById(R.id.progress_indicator_central).setVisibility(View.VISIBLE);
 
@@ -144,14 +192,6 @@ public class MainActivity
                 .addToBackStack(null)
                 .commit()
         ;
-
-        // calling BTWiz enabled routine here because without enableBtIntent(), BtWiz gives an error
-        try {
-            if (! BTWiz.isEnabled(getApplicationContext())) BTWiz.enableBTIntent();
-        } catch (DeviceNotSupportBluetooth deviceNotSupportBluetooth) {
-            deviceNotSupportBluetooth.printStackTrace();
-        }
-        ////////////////////////////////////////////////////////////////////////////////////////////
 
         if (BTWiz.getAllBondedDevices(getApplicationContext()).contains(device)) connectTo(device);
         else {
@@ -167,17 +207,34 @@ public class MainActivity
     }
 
     /*
-     * IDeviceConnectionLister
+     * IDeviceLookupListener
+     */
+
+    @Override
+    public boolean onDeviceFound(BluetoothDevice bluetoothDevice, boolean b) {
+        ((ListerFragment) getFragmentManager().findFragmentById(R.id.container)).onDeviceFound(bluetoothDevice, b);
+        return false;
+    }
+
+    @Override
+    public void onDeviceNotFound(boolean b) {
+        stopDiscovery();
+    }
+
+    /*
+     * IDeviceConnectionListener
      */
 
     @Override
     public void onConnectSuccess(BTSocket btSocket) {
         Log.e("Main", "Connect Success");
         this.socket = btSocket;
-        controlling = true;
 
         btDisconnectedReceiver = new BtDisconnectedReceiver(this);
         registerReceiver(btDisconnectedReceiver, new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED));
+
+        // TODO : read 255 bytes of data
+        // btSocket.readAsync(new byte[255], this); // triggers IReadListener
 
         runOnUiThread(new Runnable() {
             @Override
@@ -191,21 +248,54 @@ public class MainActivity
 
     @Override
     public void onConnectionError(Exception e, String s) {
-        if (e != null) {
-            Log.d("Main", "Connect Error");
-            // Todo : here either the server is not running or is not installed. A dialog to fix this.
-        }
+        Log.e("Main", "onConnectionError called");
+        final AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+        alert.setTitle(getString(R.string.main_no_server_title));
+        alert.setMessage(getString(R.string.main_no_server_body));
+        alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                onBackPressed();
+            }
+        });
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                alert.show();
+            }
+        });
     }
 
+    /*
+     * IReadListener
+     */
+
+    /* TODO //
+    @Override
+    public void onError(int code, IOException e) {
+        // unable to read data sent from server
+        e.printStackTrace();
+        socket.readAsync(new byte[255], this);
+    }
+
+    @Override
+    public void onSuccess(int code) {
+        Log.e("Main", "Got data" + String.valueOf(code) + " from server");
+        socket.readAsync(new byte[255], this);
+    }
+    //*/
 
     /*
      * Control Fragment Interactions
      */
-
     @Override
     public void sendCommand(String command) {
         try {
-            socket.write(command);
+            try {
+                socket.write(command);
+            } catch (NullPointerException n) {
+                n.printStackTrace();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -215,8 +305,8 @@ public class MainActivity
      * BtSwitchOffReceiver
      */
     @Override
-    public void btSwitchedOff() {
-
+    public void onBtSwitchedOff() {
+        onBackPressed();
     }
 
     /*
@@ -238,6 +328,6 @@ public class MainActivity
      */
     @Override
     public void onBtDisconnected() {
-
+        onBackPressed();
     }
 }
