@@ -18,10 +18,12 @@ import com.btwiz.library.DeviceNotSupportBluetooth;
 import com.btwiz.library.IDeviceConnectionListener;
 import com.btwiz.library.IDeviceLookupListener;
 import com.btwiz.library.IReadListener;
+import com.btwiz.library.SecureMode;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Set;
+import java.util.UUID;
 
 
 public class MainActivity
@@ -34,12 +36,10 @@ public class MainActivity
             // IReadListener,
             ControllerFragment.OnFragmentInteractionListener,
             BtSwitchOffReceiver.OnBtSwitchOffInteractionListener,
-            BondStateChangedReceiver.OnBondStateChangedInteractionListener,
             BtDisconnectedReceiver.OnBtDisconnectInteractionListener {
 
     private final static int REQUEST_ENABLE_BT = 1;
     private BtSwitchOffReceiver btSwitchOffReceiver;
-    private BondStateChangedReceiver bondStateChangedReceiver;
     private BtDisconnectedReceiver btDisconnectedReceiver;
     private BTSocket socket;
     private BluetoothDevice device;
@@ -82,7 +82,6 @@ public class MainActivity
         Log.e("Main", "onDestroy called");
         super.onDestroy();
         unregisterReceiver(btSwitchOffReceiver);
-        if (bondStateChangedReceiver != null) unregisterReceiver(bondStateChangedReceiver);
         if (btDisconnectedReceiver != null) unregisterReceiver(btDisconnectedReceiver);
         BTWiz.cleanup(getApplicationContext());
         try {
@@ -129,7 +128,7 @@ public class MainActivity
     public void showListerFragment() {
         getFragmentManager()
                 .beginTransaction()
-                .add(R.id.container, ListerFragment.newInstance())
+                .replace(R.id.container, ListerFragment.newInstance())
                 .addToBackStack(ListerFragment.class.getName())
                 .commit()
         ;
@@ -142,7 +141,7 @@ public class MainActivity
     // Helper methods for Lister
     public void connectTo(BluetoothDevice device) {
         setTitle(R.string.connecting);
-        BTWiz.connectAsClientAsync(getApplicationContext(), device, this);
+        BTWiz.connectAsClientAsync(getApplicationContext(), device, this, SecureMode.SECURE, UUID.fromString("a1a738e0-c3b3-11e3-9c1a-0800200c9a66"));
     }
 
     public boolean createBond(BluetoothDevice device)
@@ -193,17 +192,7 @@ public class MainActivity
                 .commit()
         ;
 
-        if (BTWiz.getAllBondedDevices(getApplicationContext()).contains(device)) connectTo(device);
-        else {
-            try {
-                bondStateChangedReceiver = new BondStateChangedReceiver(this);
-                registerReceiver(bondStateChangedReceiver, new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED));
-                setTitle(R.string.pairing);
-                createBond(device);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        connectTo(device);
     }
 
     /*
@@ -240,7 +229,7 @@ public class MainActivity
             @Override
             public void run() {
                 findViewById(R.id.progress_indicator_central).setVisibility(View.GONE);
-                setTitle(R.string.controller_connection_success);
+                setTitle(device.getName());
                 ((ControllerFragment) getFragmentManager().findFragmentById(R.id.container)).onConnectionSuccess();
             }
         });
@@ -261,7 +250,9 @@ public class MainActivity
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                alert.show();
+                if (controlling) {
+                    alert.show();
+                }
             }
         });
     }
@@ -307,20 +298,6 @@ public class MainActivity
     @Override
     public void onBtSwitchedOff() {
         onBackPressed();
-    }
-
-    /*
-     * BondStateChangeReceiver
-     */
-    // called from BondStateChangedReceiver when the the devices are paired after call to createBond
-    @Override
-    public void triggerBondStateChange() throws Exception{
-        if (device != null) {
-            // when bond state changes, simply connectTo existing device
-            connectTo(device);
-        } else {
-            throw new Exception();
-        }
     }
 
     /*

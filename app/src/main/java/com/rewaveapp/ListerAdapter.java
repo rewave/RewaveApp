@@ -21,7 +21,8 @@ public class ListerAdapter extends BaseAdapter {
 
     private Context context;
     private  List<BluetoothDevice> deviceList;
-    String deviceName;
+    private String deviceName;
+    private ViewHolder holder;
     private LayoutInflater inflater;
     ColorGenerator generator = ColorGenerator.MATERIAL;
     TextDrawable.IBuilder builder = TextDrawable.builder()
@@ -57,7 +58,6 @@ public class ListerAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup container) {
-       ViewHolder holder;
         if (convertView == null) {
             holder = new ViewHolder();
             convertView = inflater.inflate(R.layout.lister_item, null);

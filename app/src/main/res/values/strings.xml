@@ -25,4 +25,9 @@
     <string name="controller.connection.success">Connected ⚯</string>
     <string name="controller.ping">Ping</string>
     <string name="controller.exit">Exit</string>
+    <string name="controller.left">Left</string>
+    <string name="controller.right">Right</string>
+    <string name="controller.connected">Connected</string>
+    <string name="controller.wave_your_hand">Wave your hand</string>
+
 </resources>

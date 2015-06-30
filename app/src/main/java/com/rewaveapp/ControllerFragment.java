@@ -65,6 +65,16 @@ public class ControllerFragment extends Fragment {
             case (R.id.ping):
                 listener.sendCommand("ping");
                 break;
+
+            case (R.id.left):
+                listener.sendCommand("left");
+                break;
+
+            case (R.id.right):
+                listener.sendCommand("right");
+                break;
+
+
             case (R.id.exit):
                 getActivity().onBackPressed();
                 break;
@@ -76,6 +86,7 @@ public class ControllerFragment extends Fragment {
 
     public void onConnectionSuccess() {
         setHasOptionsMenu(true);
+        getActivity().findViewById(R.id.connected_message).setVisibility(View.VISIBLE);
     }
 
     public interface OnFragmentInteractionListener {

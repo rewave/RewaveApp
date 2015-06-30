@@ -10,6 +10,7 @@
         android:id="@+id/progress_indicator_central"
         android:layout_gravity="center_vertical|center_horizontal"
         android:visibility="gone"
+        android:indeterminateDrawable="@drawable/progress"
         android:layout_centerInParent="true" />
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
