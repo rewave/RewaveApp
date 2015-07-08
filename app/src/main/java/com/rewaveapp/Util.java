@@ -11,7 +11,7 @@ public class Util {
      Current Activity instance will go through its lifecycle to onDestroy() and a new instance then created after it.
      */
     @SuppressLint("NewApi")
-    public static final void recreateActivityCompat(final Activity a) {
+    public static void recreateActivityCompat(final Activity a) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             a.recreate();
         } else {

@@ -13,14 +13,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.btwiz.library.IDeviceLookupListener;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 
-public class ListerFragment extends Fragment implements AdapterView.OnItemClickListener, IDeviceLookupListener {
+public class ListerFragment extends Fragment implements AdapterView.OnItemClickListener {
 
     OnFragmentInteractionListener listener;
     ListView devicesListView;
@@ -117,11 +115,6 @@ public class ListerFragment extends Fragment implements AdapterView.OnItemClickL
         listener.onDeviceClicked(selectedDevice);
     }
 
-    /*
-     * IDeviceLookupListener
-     */
-
-    @Override
     public boolean onDeviceFound(BluetoothDevice bluetoothDevice, boolean b) {
         // TODO : bluetoothDevice.getUuids() and see if its a valid service id. Show differently if valid
         if (!btDevices.contains(bluetoothDevice)) {
@@ -131,7 +124,6 @@ public class ListerFragment extends Fragment implements AdapterView.OnItemClickL
         return false;
     }
 
-    @Override
     public void onDeviceNotFound(boolean b) {
         listener.stopDiscovery();
     }

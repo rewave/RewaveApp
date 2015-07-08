@@ -1,6 +1,7 @@
 package com.rewaveapp;
 
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
@@ -44,6 +45,7 @@ public class MainActivity
     private BTSocket socket;
     private BluetoothDevice device;
 
+    private boolean isDiscovering = false;
     private boolean controlling = false;
 
     @Override
@@ -68,10 +70,16 @@ public class MainActivity
 
     @Override
     public void onBackPressed() {
+        findViewById(R.id.progress_indicator_central).setVisibility(View.GONE);
         if (controlling) {
             controlling = false;
             sendCommand("exit"); // indicate the server that the connection is being closed
-            Util.recreateActivityCompat(this);
+            if (btDisconnectedReceiver != null) {
+                unregisterReceiver(btDisconnectedReceiver);
+                btDisconnectedReceiver = null;
+            }
+            showListerFragment();
+            //Util.recreateActivityCompat(this);
         } else {
             finish();
         }
@@ -82,7 +90,6 @@ public class MainActivity
         Log.e("Main", "onDestroy called");
         super.onDestroy();
         unregisterReceiver(btSwitchOffReceiver);
-        if (btDisconnectedReceiver != null) unregisterReceiver(btDisconnectedReceiver);
         BTWiz.cleanup(getApplicationContext());
         try {
             socket.close();
@@ -126,10 +133,10 @@ public class MainActivity
     }
 
     public void showListerFragment() {
+        setTitle(getString(R.string.title_activity_main));
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.container, ListerFragment.newInstance())
-                .addToBackStack(ListerFragment.class.getName())
                 .commit()
         ;
     }
@@ -143,16 +150,6 @@ public class MainActivity
         setTitle(R.string.connecting);
         BTWiz.connectAsClientAsync(getApplicationContext(), device, this, SecureMode.SECURE, UUID.fromString("a1a738e0-c3b3-11e3-9c1a-0800200c9a66"));
     }
-
-    public boolean createBond(BluetoothDevice device)
-            throws Exception
-    {
-        Class deviceClass = Class.forName("android.bluetooth.BluetoothDevice");
-        Method createBondMethod = deviceClass.getMethod("createBond");
-        return (Boolean) createBondMethod.invoke(device);
-    }
-
-    private boolean isDiscovering = false;
 
     @Override
     public Set<BluetoothDevice> getBondedDevices() {
@@ -230,7 +227,13 @@ public class MainActivity
             public void run() {
                 findViewById(R.id.progress_indicator_central).setVisibility(View.GONE);
                 setTitle(device.getName());
-                ((ControllerFragment) getFragmentManager().findFragmentById(R.id.container)).onConnectionSuccess();
+
+                Fragment current = getFragmentManager().findFragmentById(R.id.container);
+                if (current instanceof ControllerFragment) {
+                    ((ControllerFragment) current).onConnectionSuccess();
+                } else {
+                    // the user has already pressed back while loading
+                }
             }
         });
     }
@@ -238,6 +241,7 @@ public class MainActivity
     @Override
     public void onConnectionError(Exception e, String s) {
         Log.e("Main", "onConnectionError called");
+        Log.e("Main", "s = " + s);
         final AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
         alert.setTitle(getString(R.string.main_no_server_title));
         alert.setMessage(getString(R.string.main_no_server_body));
@@ -250,7 +254,9 @@ public class MainActivity
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                findViewById(R.id.progress_indicator_central).setVisibility(View.GONE);
                 if (controlling) {
+                    // show only if controlling because if the user pressed back button in the loading time then this will be irrelevant
                     alert.show();
                 }
             }
@@ -297,7 +303,7 @@ public class MainActivity
      */
     @Override
     public void onBtSwitchedOff() {
-        onBackPressed();
+        Util.recreateActivityCompat(this);
     }
 
     /*
