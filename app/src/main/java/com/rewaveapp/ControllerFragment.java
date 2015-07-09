@@ -62,7 +62,7 @@ public class ControllerFragment extends Fragment implements SensorEventListener 
         super.onActivityCreated(savedInstanceState);
         sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     @Override
@@ -109,6 +109,7 @@ public class ControllerFragment extends Fragment implements SensorEventListener 
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            Log.e("Controller", "Motion log size = " + String.valueOf(motionLog.size()));
             double ax = event.values[0];
             double ay = event.values[1];
             double sos = (Math.pow(ax, 2.0) + Math.pow(ay, 2.0));

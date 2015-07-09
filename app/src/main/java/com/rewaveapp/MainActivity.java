@@ -4,10 +4,12 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -44,6 +46,7 @@ public class MainActivity
     private BtDisconnectedReceiver btDisconnectedReceiver;
     private BTSocket socket;
     private BluetoothDevice device;
+    private Vibrator vibrator;
 
     private boolean isDiscovering = false;
     private boolean controlling = false;
@@ -61,6 +64,8 @@ public class MainActivity
             // see that the user or some other app doesn't switches off bt in the background
             btSwitchOffReceiver = new BtSwitchOffReceiver(this);
             registerReceiver(btSwitchOffReceiver, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
+
+            vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
         } catch (DeviceNotSupportBluetooth e) {
             Toast.makeText(getApplicationContext(), "No Bluetooth Available : Rewave needs bluetooth to function", Toast.LENGTH_LONG).show();
@@ -290,6 +295,7 @@ public class MainActivity
         try {
             try {
                 socket.write(command);
+                vibrator.vibrate(100);
             } catch (NullPointerException n) {
                 n.printStackTrace();
             }
