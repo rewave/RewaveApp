@@ -75,6 +75,7 @@ public class MainActivity
 
     @Override
     public void onBackPressed() {
+        setTitle(getString(R.string.title_activity_main));
         findViewById(R.id.progress_indicator_central).setVisibility(View.GONE);
         if (controlling) {
             controlling = false;
@@ -138,7 +139,6 @@ public class MainActivity
     }
 
     public void showListerFragment() {
-        setTitle(getString(R.string.title_activity_main));
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.container, ListerFragment.newInstance())
@@ -246,7 +246,6 @@ public class MainActivity
     @Override
     public void onConnectionError(Exception e, String s) {
         Log.e("Main", "onConnectionError called");
-        Log.e("Main", "s = " + s);
         final AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
         alert.setTitle(getString(R.string.main_no_server_title));
         alert.setMessage(getString(R.string.main_no_server_body));
@@ -260,10 +259,7 @@ public class MainActivity
             @Override
             public void run() {
                 findViewById(R.id.progress_indicator_central).setVisibility(View.GONE);
-                if (controlling) {
-                    // show only if controlling because if the user pressed back button in the loading time then this will be irrelevant
-                    alert.show();
-                }
+                if (controlling) alert.show();
             }
         });
     }
@@ -295,7 +291,7 @@ public class MainActivity
         try {
             try {
                 socket.write(command);
-                vibrator.vibrate(100);
+                if (!command.contains("move_mouse")) vibrate();
             } catch (NullPointerException n) {
                 n.printStackTrace();
             }
@@ -304,6 +300,14 @@ public class MainActivity
         }
     }
 
+    @Override
+    public void vibrate(int time) {
+        vibrator.vibrate(time);
+    }
+
+    public void vibrate() {
+        vibrate(100);
+    }
     /*
      * BtSwitchOffReceiver
      */

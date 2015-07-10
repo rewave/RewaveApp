@@ -8,16 +8,6 @@
         android:id="@+id/ping" />
 
     <item
-        android:title="@string/controller.left"
-        app:showAsAction="never"
-        android:id="@+id/left" />
-
-    <item
-        android:title="@string/controller.right"
-        app:showAsAction="never"
-        android:id="@+id/right"/>
-
-    <item
         android:title="@string/controller.exit"
         app:showAsAction="never"
         android:id="@+id/exit" />

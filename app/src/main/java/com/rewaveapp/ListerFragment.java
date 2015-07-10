@@ -3,6 +3,8 @@ package com.rewaveapp;
 import android.app.Activity;
 import android.app.Fragment;
 import android.bluetooth.BluetoothDevice;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -57,6 +59,14 @@ public class ListerFragment extends Fragment implements AdapterView.OnItemClickL
             case R.id.action_stop_refreshing:
                 listener.stopDiscovery();
                 break;
+            case R.id.action_feedback:
+                Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                        "mailto", "entourage@rewaveapp.com", null));
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Feedback");
+                emailIntent.putExtra(Intent.EXTRA_TEXT, "");
+                startActivity(Intent.createChooser(emailIntent, "Send using"));
+                break;
+
             default:
                 break;
         }

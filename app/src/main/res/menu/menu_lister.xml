@@ -20,6 +20,6 @@
         android:title="@string/lister.menu.action_refresh"/>
 
     <item
-        android:id="@+id/feedback"
+        android:id="@+id/action_feedback"
         android:title="@string/lister.feedback" />
 </menu>
