@@ -156,7 +156,7 @@ public class ControllerFragment
     @Override
     public boolean onDoubleTap(MotionEvent e) {
         waveHandTextView.setText("Back");
-        listener.sendCommand("Left");
+        listener.sendCommand("left");
         return false;
     }
 
@@ -168,7 +168,7 @@ public class ControllerFragment
     @Override
     public boolean onSingleTapConfirmed(MotionEvent e) {
         waveHandTextView.setText("Forward");
-        listener.sendCommand("Right");
+        listener.sendCommand("right");
         return false;
     }
 
