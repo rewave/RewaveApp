@@ -8,9 +8,9 @@
     <string name="pairing">Pairing</string>
     <string name="connecting">Connecting ⎌</string>
 
-    <string name="main.bluetooth_required_title">Rewave needs bluetooth</string>
-    <string name="main.bluetooth_required_body">Please :|</string>
-    <string name="main.no_server_title">Server not Running</string>
+    <string name="main.bluetooth_required_title">Rewave needs Bluetooth</string>
+    <string name="main.bluetooth_required_body">:|</string>
+    <string name="main.no_server_title">Server not running</string>
     <string name="main.no_server_body">Please install the server or start it if already installed</string>
 
     <string name="lister.title">Rewave</string>
@@ -29,5 +29,27 @@
     <string name="controller.right">Right</string>
     <string name="controller.connected">Connected</string>
     <string name="controller.wave_your_hand">Wave your hand</string>
+
+    <string name="help.title">Help</string>
+    <string name="help.about">Rewave App helps you control presentations with natural gestures.
+        Single Tap to go forward, Double Tap to go back.</string>
+
+    <string name="help.discover.title">Discovering Servers</string>
+    <string name="help.discover.body">To control a computer, simply choose discover devices and
+        click the desired machine. Make sure that Rewave Server is running on that machine.
+        The server can be downloaded for free from http://rewaveapp.com </string>
+
+    <string name="help.connect.title">Connecting</string>
+    <string name="help.connect.body">When server is running on the computer, tap it\'s name on your
+        phone to connect to it. In case of no \"Server not running\" message start the server. If the
+        server is running, try to reconnect.</string>
+
+    <string name="help.control.title">Controlling</string>
+    <string name="help.control.body">Once connected, open up your presentation
+        (ppt, google docs, pdf, slideshare etc) and single tap to go forward, double tap to go back.</string>
+
+    <string name="help.contact">Problem ? We\'ll be more than happy to help you.
+        Reach us at entourage@rewaveapp.com</string>
+
 
 </resources>

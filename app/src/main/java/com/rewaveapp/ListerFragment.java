@@ -62,9 +62,13 @@ public class ListerFragment extends Fragment implements AdapterView.OnItemClickL
             case R.id.action_feedback:
                 Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
                         "mailto", "entourage@rewaveapp.com", null));
-                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Feedback");
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Rewave App Feedback");
                 emailIntent.putExtra(Intent.EXTRA_TEXT, "");
                 startActivity(Intent.createChooser(emailIntent, "Send using"));
+                break;
+
+            case R.id.action_help:
+                listener.showHelp();
                 break;
 
             default:
@@ -143,5 +147,6 @@ public class ListerFragment extends Fragment implements AdapterView.OnItemClickL
         void startDiscovery();
         void stopDiscovery();
         void onDeviceClicked(BluetoothDevice device);
+        void showHelp();
     }
 }

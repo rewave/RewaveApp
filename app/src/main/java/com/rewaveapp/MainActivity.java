@@ -20,11 +20,9 @@ import com.btwiz.library.BTWiz;
 import com.btwiz.library.DeviceNotSupportBluetooth;
 import com.btwiz.library.IDeviceConnectionListener;
 import com.btwiz.library.IDeviceLookupListener;
-import com.btwiz.library.IReadListener;
 import com.btwiz.library.SecureMode;
 
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.util.Set;
 import java.util.UUID;
 
@@ -197,6 +195,13 @@ public class MainActivity
         connectTo(device);
     }
 
+    @Override
+    public  void showHelp() {
+        Intent myIntent = new Intent(MainActivity.this, HelpActivity.class);
+        startActivity(myIntent);
+
+    }
+
     /*
      * IDeviceLookupListener
      */
@@ -249,7 +254,19 @@ public class MainActivity
         final AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
         alert.setTitle(getString(R.string.main_no_server_title));
         alert.setMessage(getString(R.string.main_no_server_body));
-        alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        alert.setNeutralButton("Retry", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                connectTo(device);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        findViewById(R.id.progress_indicator_central).setVisibility(View.VISIBLE);
+                    }
+                });
+            }
+        });
+        alert.setPositiveButton("Close", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 onBackPressed();

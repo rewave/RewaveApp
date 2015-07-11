@@ -30,8 +30,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/controller.wave_your_hand"
             android:id="@+id/wave_your_hand"
+            android:text="@string/loading_indicator"
             android:layout_gravity="center" />
 
     </LinearLayout>

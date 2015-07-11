@@ -156,7 +156,7 @@ public class ControllerFragment
     @Override
     public boolean onDoubleTap(MotionEvent e) {
         waveHandTextView.setText("Back");
-        listener.sendCommand("left");
+        listener.sendCommand("Left");
         return false;
     }
 
@@ -168,7 +168,7 @@ public class ControllerFragment
     @Override
     public boolean onSingleTapConfirmed(MotionEvent e) {
         waveHandTextView.setText("Forward");
-        listener.sendCommand("right");
+        listener.sendCommand("Right");
         return false;
     }
 
@@ -178,17 +178,16 @@ public class ControllerFragment
     @Override
     public boolean onTouch(View v, MotionEvent e) {
         /*
-               M units on phone, C units on computer (M, C are vectors such that M & C = [x_dim, y_dim])
-               M = C
-               1 = C/M
-               x = (C/M)*x;
+            M units on phone, C units on computer (M, C are vectors such that M & C = [x_dim, y_dim])
+            M = C
+            1 = C/M
+            x = (C/M)*x;
 
-               we send x/M from here and server will multiply that with C to map touch on phone to mouse motion on computer
-            */
+            we send x/M from here and server will multiply that with C to map touch on phone to mouse motion on computer
+        */
         float xCurrent = e.getX() / screenWidth;
         float yCurrent = e.getY() / screenHeight;
         float threshold = Math.abs(xCurrent - xHistory) + Math.abs(yCurrent - yHistory);
-        Log.e("Controller", "Threshold : "+ String.valueOf(threshold));
         if (xHistory == 0.0f && yHistory == 0.0f) {
             // first time long press
             listener.sendCommand("move_mouse-" + String.valueOf(xCurrent) + "-" + String.valueOf(yCurrent));
