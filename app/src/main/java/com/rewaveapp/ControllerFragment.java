@@ -193,7 +193,7 @@ public class ControllerFragment
             listener.sendCommand("move_mouse-" + String.valueOf(xCurrent) + "-" + String.valueOf(yCurrent));
         } else {
             // now threshold mouse motion
-            if ( Math.abs(xCurrent - xHistory) + Math.abs(yCurrent - yHistory) >= 0.005) {
+            if ( threshold >= 0.005) {
                 listener.sendCommand("move_mouse-" + String.valueOf(xCurrent) + "-" + String.valueOf(yCurrent));
             }
         }
