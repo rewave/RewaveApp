@@ -3,8 +3,9 @@ package com.rewaveapp;
 import android.app.Activity;
 import android.app.Fragment;
 import android.bluetooth.BluetoothDevice;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,11 +15,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.btwiz.library.BTWiz;
-import com.btwiz.library.IDeviceLookupListener;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 
 public class ListerFragment extends Fragment implements AdapterView.OnItemClickListener {
@@ -29,15 +28,11 @@ public class ListerFragment extends Fragment implements AdapterView.OnItemClickL
     ListerAdapter listerAdapter;
     List<BluetoothDevice> btDevices;
 
-    boolean isDiscovering = false;
-
     public static ListerFragment newInstance() {
         return new ListerFragment();
     }
 
-    public ListerFragment() {
-        // Required empty public constructor
-    }
+    public ListerFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,7 +46,7 @@ public class ListerFragment extends Fragment implements AdapterView.OnItemClickL
         return inflater.inflate(R.layout.fragment_lister, container, false);
     }
 
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_lister, menu);
         this.menu = menu;
     }
@@ -59,10 +54,23 @@ public class ListerFragment extends Fragment implements AdapterView.OnItemClickL
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                startDiscovery();
+                listener.startDiscovery();
                 break;
             case R.id.action_stop_refreshing:
-                stopDiscovery();
+                listener.stopDiscovery();
+                break;
+            case R.id.action_feedback:
+                Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                        "mailto", "entourage@rewaveapp.com", null));
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Rewave App Feedback");
+                emailIntent.putExtra(Intent.EXTRA_TEXT, "");
+                startActivity(Intent.createChooser(emailIntent, "Send using"));
+                break;
+
+            case R.id.action_help:
+                listener.showHelp();
+                break;
+
             default:
                 break;
         }
@@ -74,7 +82,7 @@ public class ListerFragment extends Fragment implements AdapterView.OnItemClickL
         super.onActivityCreated(savedInstanceState);
         devicesListView = (ListView) getActivity().findViewById(R.id.devices_list);
         devicesListView.setOnItemClickListener(this);
-        btDevices = new ArrayList<>(BTWiz.getAllBondedDevices(getActivity()));
+        btDevices = new ArrayList<>(listener.getBondedDevices());
         listerAdapter = new ListerAdapter(getActivity(), btDevices);
         devicesListView.setAdapter(listerAdapter);
     }
@@ -82,7 +90,6 @@ public class ListerFragment extends Fragment implements AdapterView.OnItemClickL
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        Log.d("Lister", "OnAttach called");
         try {
             listener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
@@ -93,61 +100,53 @@ public class ListerFragment extends Fragment implements AdapterView.OnItemClickL
 
     @Override
     public void onDetach() {
-        super.onDetach();
-        Log.d("Lister", "OnDetach called");
         listener = null;
-        BTWiz.cleanup(getActivity());
+        super.onDetach();
     }
 
-    public void startDiscovery() {
-        if (!isDiscovering) {
-            isDiscovering = true;
-            getActivity().setTitle(R.string.lister_discovering);
-            menu.findItem(R.id.action_stop_refreshing).setVisible(true);
-            menu.findItem(R.id.action_refresh).setVisible(false);
-            menu.findItem(R.id.progress_indicator).setVisible(true);
-
-            BTWiz.startDiscoveryAsync(getActivity(), new Runnable() {
-                @Override
-                public void run() {
-                }
-            }, new IDeviceLookupListener() {
-                @Override
-                public boolean onDeviceFound(BluetoothDevice bluetoothDevice, boolean b) {
-                    if (!btDevices.contains(bluetoothDevice)) {
-                        btDevices.add(bluetoothDevice);
-                        listerAdapter.notifyDataSetChanged();
-                    }
-                    return false;
-                }
-
-                @Override
-                public void onDeviceNotFound(boolean b) {
-                    stopDiscovery();
-                }
-            });
-        }
+    public void discoveryStarted() {
+        getActivity().setTitle(R.string.lister_discovering);
+        menu.findItem(R.id.action_stop_refreshing).setVisible(true);
+        menu.findItem(R.id.action_refresh).setVisible(false);
+        menu.findItem(R.id.progress_indicator).setVisible(true);
     }
 
-    public void stopDiscovery() {
-        if (isDiscovering) {
-            isDiscovering = false;
-            BTWiz.stopDiscovery(getActivity());
+    public void discoveryFinished() {
             getActivity().setTitle(R.string.lister_title);
             menu.findItem(R.id.action_stop_refreshing).setVisible(false);
             menu.findItem(R.id.action_refresh).setVisible(true);
             menu.findItem(R.id.progress_indicator).setVisible(false);
-        }
     }
+
+    /*
+     * AdapterView.OnItemClickListener
+     */
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        stopDiscovery();
+        listener.stopDiscovery();
         BluetoothDevice selectedDevice = (BluetoothDevice) listerAdapter.getItem(position);
         listener.onDeviceClicked(selectedDevice);
     }
 
+    public boolean onDeviceFound(BluetoothDevice bluetoothDevice, boolean b) {
+        // TODO : bluetoothDevice.getUuids() and see if its a valid service id. Show differently if valid
+        if (!btDevices.contains(bluetoothDevice)) {
+            btDevices.add(bluetoothDevice);
+            listerAdapter.notifyDataSetChanged();
+        }
+        return false;
+    }
+
+    public void onDeviceNotFound(boolean b) {
+        listener.stopDiscovery();
+    }
+
     public interface OnFragmentInteractionListener {
+        Set<BluetoothDevice> getBondedDevices();
+        void startDiscovery();
+        void stopDiscovery();
         void onDeviceClicked(BluetoothDevice device);
+        void showHelp();
     }
 }

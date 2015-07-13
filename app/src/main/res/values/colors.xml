@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--Branding Palette-->
+    <!--Branding Palette V1-->
     <color name="blue">#73a9f0</color>
     <color name="yellow">#f3cd66</color>
     <color name="pink">#fc888a</color>
     <color name="green">#73f0b8</color>
-    <color name="gray">#6e6f71</color>
+
+    <!--Branding Palette V2-->
+    <color name="bleu_de_france">#317cde</color>
+    <color name="azure">#2f64aa</color>
+    <color name="yale_blue">#14498e</color>
+    <color name="gray">#818181</color>
+
 
     <!--Utility-->
     <color name="white">#ffffff</color>
@@ -13,9 +19,10 @@
     <color name="gray4">#444444</color>
     <color name="gray8">#888888</color>
     <color name="gray9">#999999</color>
+    <color name="light_gray">#eeeeee</color>
 
-    <color name="primary">@color/blue</color>
-    <color name="primary_dark">#3683e9</color>
+    <color name="primary">@color/bleu_de_france</color>
+    <color name="primary_dark">@color/bleu_de_france</color>
 
     <!--Buttons-->
     <color name="button_proceed">#f55f3f</color>
