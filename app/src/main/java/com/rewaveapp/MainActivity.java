@@ -22,6 +22,8 @@ import com.btwiz.library.IDeviceConnectionListener;
 import com.btwiz.library.IDeviceLookupListener;
 import com.btwiz.library.SecureMode;
 
+import org.codechimp.apprater.AppRater;
+
 import java.io.IOException;
 import java.util.Set;
 import java.util.UUID;
@@ -69,6 +71,8 @@ public class MainActivity
             Toast.makeText(getApplicationContext(), "No Bluetooth Available : Rewave needs bluetooth to function", Toast.LENGTH_LONG).show();
             finish();
         }
+
+        AppRater.app_launched(this, 5, 5);
     }
 
     @Override

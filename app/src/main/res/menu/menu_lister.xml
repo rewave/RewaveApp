@@ -26,4 +26,8 @@
     <item
         android:id="@+id/action_help"
         android:title="@string/help.title" />
+
+    <item
+        android:id="@+id/action_rate"
+        android:title="@string/lister.rate" />
 </menu>

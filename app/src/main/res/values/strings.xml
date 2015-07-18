@@ -20,6 +20,7 @@
     <string name="lister.rate_us">Rate Us</string>
     <string name="lister.menu.action_refresh">Discover Devices</string>
     <string name="lister.menu.action_stop_refreshing">Stop Discovering</string>
+    <string name="lister.rate">☆ Rate Us ☆</string>
 
     <string name="controller.connection.error">Could not connect, is the server running ?</string>
     <string name="controller.connection.success">Connected ⚯</string>
@@ -46,7 +47,7 @@
 
     <string name="help.control.title">Controlling</string>
     <string name="help.control.body">Once connected, open up your presentation
-        (ppt, google docs, pdf, slideshare etc) and single tap to go forward, double tap to go back.</string>
+        (ppt, google docs, pdf, Slideshare etc) and single tap to go forward, double tap to go back.</string>
 
     <string name="help.contact">Problem ? We\'ll be more than happy to help you.
         Reach us at entourage@rewaveapp.com</string>
