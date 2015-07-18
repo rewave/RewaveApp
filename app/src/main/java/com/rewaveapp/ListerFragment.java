@@ -15,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import org.codechimp.apprater.AppRater;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -69,6 +71,10 @@ public class ListerFragment extends Fragment implements AdapterView.OnItemClickL
 
             case R.id.action_help:
                 listener.showHelp();
+                break;
+
+            case R.id.action_rate:
+                AppRater.rateNow(getActivity());
                 break;
 
             default:
