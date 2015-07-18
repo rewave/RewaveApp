@@ -9,13 +9,6 @@
         <dex dex="/home/shivekkhurana/D/projects/rewave/RewaveApp/app/build/intermediates/pre-dexed/debug/BTWiz_v1.2-c76983ed10e51ea8d7bc1f454731200004a9e355.jar" />
     </item>
     <item
-        jar="/home/shivekkhurana/D/projects/rewave/RewaveApp/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.1.1/libs/internal_impl-22.1.1.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="9e070ad32b2700b0343e8e0cccc437733d91ba3a">
-        <dex dex="/home/shivekkhurana/D/projects/rewave/RewaveApp/app/build/intermediates/pre-dexed/debug/internal_impl-22.1.1-b3d9adefd715b9fcc7a3ae79a566e58b8a35a5cb.jar" />
-    </item>
-    <item
         jar="/home/shivekkhurana/D/projects/rewave/RewaveApp/app/build/intermediates/exploded-aar/com.amulyakhare/com.amulyakhare.textdrawable/1.0.1/classes.jar"
         jumboMode="false"
         revision="21.1.2"
@@ -23,11 +16,25 @@
         <dex dex="/home/shivekkhurana/D/projects/rewave/RewaveApp/app/build/intermediates/pre-dexed/debug/classes-40fde6019175dd3f6946a281328d3a0db1743783.jar" />
     </item>
     <item
+        jar="/home/shivekkhurana/D/projects/rewave/RewaveApp/app/build/intermediates/exploded-aar/com.github.codechimp-org.apprater/library/1.0.29/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="9c76a1f52a6b31f304d3829c719a2429e93c4aba">
+        <dex dex="/home/shivekkhurana/D/projects/rewave/RewaveApp/app/build/intermediates/pre-dexed/debug/classes-e3ef307379fec0dc6532c2ea48549ca820ecdf5e.jar" />
+    </item>
+    <item
         jar="/home/shivekkhurana/D/projects/rewave/RewaveApp/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.1.1/classes.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="c95ba8152923e4872e86a82cfcba9a51c0214328">
         <dex dex="/home/shivekkhurana/D/projects/rewave/RewaveApp/app/build/intermediates/pre-dexed/debug/classes-59acd6e4493c6a5cad64eb9da289872878a05f5c.jar" />
+    </item>
+    <item
+        jar="/home/shivekkhurana/D/projects/rewave/RewaveApp/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.1.1/libs/internal_impl-22.1.1.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="9e070ad32b2700b0343e8e0cccc437733d91ba3a">
+        <dex dex="/home/shivekkhurana/D/projects/rewave/RewaveApp/app/build/intermediates/pre-dexed/debug/internal_impl-22.1.1-b3d9adefd715b9fcc7a3ae79a566e58b8a35a5cb.jar" />
     </item>
     <item
         jar="/home/shivekkhurana/D/softwares/android-sdk-linux/extras/android/m2repository/com/android/support/support-annotations/22.1.1/support-annotations-22.1.1.jar"
