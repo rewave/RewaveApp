@@ -2,13 +2,6 @@
 <items version="2" >
 
     <item
-        jar="/home/shivekkhurana/D/projects/rewave/RewaveApp/app/build/intermediates/exploded-aar/com.avast/android-styled-dialogs/2.2.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="2b9373f04cbd55e4e207b05f52673da47bf69ee4">
-        <dex dex="/home/shivekkhurana/D/projects/rewave/RewaveApp/app/build/intermediates/pre-dexed/debug/classes-5cc741c48a991db06c773555e47413b78faa921e.jar" />
-    </item>
-    <item
         jar="/home/shivekkhurana/D/projects/rewave/RewaveApp/app/libs/BTWiz_v1.2.jar"
         jumboMode="false"
         revision="21.1.2"
@@ -21,13 +14,6 @@
         revision="21.1.2"
         sha1="9e070ad32b2700b0343e8e0cccc437733d91ba3a">
         <dex dex="/home/shivekkhurana/D/projects/rewave/RewaveApp/app/build/intermediates/pre-dexed/debug/internal_impl-22.1.1-b3d9adefd715b9fcc7a3ae79a566e58b8a35a5cb.jar" />
-    </item>
-    <item
-        jar="/home/shivekkhurana/D/projects/rewave/RewaveApp/app/build/intermediates/exploded-aar/mbanje.kurt/fabbutton/1.0.9/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="18c6c5e9c48feee5edbda914eeda60eab03d4adc">
-        <dex dex="/home/shivekkhurana/D/projects/rewave/RewaveApp/app/build/intermediates/pre-dexed/debug/classes-fec1faf5eebf557cf86c628141f3d5e443b0dfc4.jar" />
     </item>
     <item
         jar="/home/shivekkhurana/D/projects/rewave/RewaveApp/app/build/intermediates/exploded-aar/com.amulyakhare/com.amulyakhare.textdrawable/1.0.1/classes.jar"

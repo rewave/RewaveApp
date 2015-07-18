@@ -33,7 +33,6 @@ public class ListerAdapter extends BaseAdapter {
     static class ViewHolder {
         ImageView letterTile;
         TextView deviceName;
-        int color = 0;
     }
 
     public ListerAdapter(Context context, List<BluetoothDevice> deviceList) {
@@ -64,14 +63,13 @@ public class ListerAdapter extends BaseAdapter {
             convertView = inflater.inflate(R.layout.lister_item, null);
             holder.letterTile = (ImageView) convertView.findViewById(R.id.letter_tile);
             holder.deviceName = (TextView) convertView.findViewById(R.id.device_name);
-            holder.color = generator.getRandomColor();
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
         deviceName = ((BluetoothDevice) getItem(position)).getName();
-        holder.letterTile.setImageDrawable(builder.build(deviceName.substring(0, 1), holder.color != 0 ? holder.color : 1));
+        holder.letterTile.setImageDrawable(builder.build(deviceName.substring(0, 1), generator.getRandomColor()));
         holder.deviceName.setText(deviceName);
 
         return convertView;
